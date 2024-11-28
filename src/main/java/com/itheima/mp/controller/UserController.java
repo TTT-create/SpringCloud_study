@@ -47,19 +47,13 @@ public class UserController {
     @GetMapping("/{id}")
     @ApiOperation("根据Id查询用户")
     public UserVO queryUserById(@ApiParam("用户Id") @PathVariable Long id){
-        //查询用户
-        User user = userService.getById(id);
-        //把PO拷贝到VO
-        return BeanUtil.copyProperties(user, UserVO.class);
+        return userService.queryUserAndAddressById(id);
     }
 
     @GetMapping
     @ApiOperation("根据Id批量查询用户")
-    public List<UserVO> queryUserById(@ApiParam("用户Id") @RequestParam List<Long> ids){
-        //查询用户
-        List<User> user = userService.listByIds(ids);
-        //把PO拷贝到VO
-        return BeanUtil.copyToList(user, UserVO.class);
+    public List<UserVO> queryUserById(@ApiParam("用户Id") @RequestParam("ids") List<Long> ids){
+        return userService.queryUserAndAddressByIds(ids);
     }
 
     @PutMapping("/{id}/deduction/{money}")

@@ -25,7 +25,7 @@ public class UserserviceImpl extends ServiceImpl<UserMapper, User> implements IU
         User user = getById(id);
 
         //校验用户状态
-        if (user == null && user.getStatus() == 2){
+        if (user == null || user.getStatus() == 2){
             throw new RuntimeException("用户状态异常");
         }
 

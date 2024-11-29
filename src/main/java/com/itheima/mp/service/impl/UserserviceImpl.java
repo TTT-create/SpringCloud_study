@@ -57,17 +57,17 @@ public class UserserviceImpl extends ServiceImpl<UserMapper, User> implements IU
 
     @Override
     public UserVO queryUserAndAddressById(Long id) {
-        //查询用户
+        //1.查询用户
         User user = getById(id);
         if (user == null || user.getStatus() == 2){
             throw new RuntimeException("用户状态异常！");
         }
-        //查询地址
+        //2.查询地址
         List<Address> addresses = Db.lambdaQuery(Address.class).eq(Address::getUserId, id).list();
-        //封装VO
+        //2.1.封装VO
         //转User的PO为VO
         UserVO userVO = BeanUtil.copyProperties(user, UserVO.class);
-        //转地址VO
+        //2.2.转地址VO
         if (CollUtil.isNotEmpty(addresses)){
             userVO.setAddresses(BeanUtil.copyToList(addresses, AddressVO.class));
         }

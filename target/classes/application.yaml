@@ -13,6 +13,9 @@ logging:
 #  mapper-locations: classpath*:mapper/*.xml
 mybatis-plus:
   type-aliases-package: com.itheima.mp.domain.po
+  global-config:
+    db-config:
+      logic-delete-field: deleted   # 配置逻辑删除字段
 knife4j:
   enable: true
   openapi:

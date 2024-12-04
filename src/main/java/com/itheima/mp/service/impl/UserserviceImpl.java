@@ -2,10 +2,15 @@ package com.itheima.mp.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.core.metadata.OrderItem;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.baomidou.mybatisplus.extension.toolkit.Db;
+import com.itheima.mp.domain.dto.PageDTO;
 import com.itheima.mp.domain.po.Address;
 import com.itheima.mp.domain.po.User;
+import com.itheima.mp.domain.query.UserQuery;
 import com.itheima.mp.domain.vo.AddressVO;
 import com.itheima.mp.domain.vo.UserVO;
 import com.itheima.mp.enums.UserStatus;
@@ -107,5 +112,26 @@ public class UserserviceImpl extends ServiceImpl<UserMapper, User> implements IU
             vo.setAddresses(addressMap.get(user.getId()));
         }
         return list;
+    }
+
+    @Override
+    public PageDTO<UserVO> queryUsersPage(UserQuery query) {
+        String name = query.getName();
+        Integer status = query.getStatus();
+        //1. 构建查询条件
+        Page<User> page = query.toMpPageDefaultSortByUpdateTimeDesc();
+
+        //2. 分页查询
+        lambdaQuery().like(name != null, User::getUsername, name)
+                .eq(status != null, User::getStatus, status)
+                .page(page);
+        //3. 封装VO结果
+        return PageDTO.of(page,user -> {
+            //1.拷贝基础属性
+            UserVO vo = BeanUtil.copyProperties(user, UserVO.class);
+            //2.处理特殊逻辑
+            vo.setUsername(vo.getUsername().substring(0, vo.getUsername().length() - 2)+"**");
+            return vo;
+        });
     }
 }

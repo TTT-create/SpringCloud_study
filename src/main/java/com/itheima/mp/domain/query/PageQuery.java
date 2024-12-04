@@ -2,13 +2,20 @@ package com.itheima.mp.domain.query;
 
 import com.baomidou.mybatisplus.core.metadata.OrderItem;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 @Data
+@ApiModel(description = "分页查询实体")
 public class PageQuery {
+    @ApiModelProperty("页码")
     private Integer pageNo;
+    @ApiModelProperty("页码")
     private Integer pageSize;
+    @ApiModelProperty("排序字段")
     private String sortBy;
+    @ApiModelProperty("是否升序")
     private Boolean isAsc;
 
     public <T>  Page<T> toMpPage(OrderItem ... orders){
